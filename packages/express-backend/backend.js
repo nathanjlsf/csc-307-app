@@ -40,22 +40,11 @@ const findUserByName = (name) => {
       (user) => user["name"] === name
     );
   };
-  
-  app.get("/users", (req, res) => {
-    const name = req.query.name;
-    if (name != undefined) {
-      let result = findUserByName(name);
-      result = { users_list: result };
-      res.send(result);
-    } else {
-      res.send(users);
-    }
-  });
 
 const findUserById = (id) =>
     users["users_list"].find((user) => user["id"] === id);
   
-  app.get("/users/:id", (req, res) => {
+app.get("/users/:id", (req, res) => {
     const id = req.params["id"]; //or req.params.id
     let result = findUserById(id);
     if (result === undefined) {
@@ -66,20 +55,26 @@ const findUserById = (id) =>
   });
 
 const findUserByNameAndJob = (name, job) => {
-    return users["users_list"].filter((user) => user["name"] === name && user["job"] === job)
+    return users["users_list"].filter(
+        (user) => user["name"] === name && user["job"] === job);
 };
 
 app.get("/users", (req, res) => {
     const name = req.query.name;
     const job = req.query.job;
-    if (name != undefined && job != undefined) {
-        let result = findUserByNameAndJob(name, job);
-        result = {users_list : result};
-        res.send(result);
+  
+    if (name !== undefined && job !== undefined) {
+      let result = findUserByNameAndJob(name, job);
+      result = { users_list: result };
+      res.send(result);
+    } else if (name !== undefined) {
+      let result = findUserByName(name);
+      result = { users_list: result };
+      res.send(result);
     } else {
-        res.send(users);
+      res.send(users);
     }
-})
+  });
 
 const deleteUserById = (id) => {
     const index = users["users_list"].findIndex((user) => user["id"] === id);
@@ -89,9 +84,9 @@ const deleteUserById = (id) => {
     } else {
         return false
     }
-}
+};
 
-  app.delete("/users", (req, res) => {
+app.delete("/users", (req, res) => {
     const id = req.query["id"];
     let result = findUserById(id);
     if (result === undefined) {
@@ -111,15 +106,11 @@ const addUser = (user) => {
     return user;
   };
   
-  app.post("/users", (req, res) => {
+app.post("/users", (req, res) => {
     const userToAdd = req.body;
     addUser(userToAdd);
     res.send();
   });
-
-app.get("/users", (req, res) => {
-    res.send(users);
-});
 
 app.get("/", (req, res) => {
   res.send("Hello World!");
