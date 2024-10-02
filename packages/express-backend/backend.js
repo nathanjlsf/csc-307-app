@@ -65,19 +65,46 @@ const findUserById = (id) =>
     }
   });
 
-const deleteUserById = (id) =>
-    users["users_list"].pop((user) => user["id"] === id);
+const findUserByNameAndJob = (name, job) => {
+    return users["users_list"].filter((user) => user["name"] === name && user["job"] === job)
+};
+
+app.get("/users", (req, res) => {
+    const name = req.query.name;
+    const job = req.query.job;
+    if (name != undefined && job != undefined) {
+        let result = findUserByNameAndJob(name, job);
+        result = {users_list : result};
+        res.send(result);
+    } else {
+        res.send(users);
+    }
+})
+
+const deleteUserById = (id) => {
+    const index = users["users_list"].findIndex((user) => user["id"] === id);
+    if (index !== -1) {
+        users["users_list"].splice(index, 1);
+        return true;
+    } else {
+        return false
+    }
+}
 
   app.delete("/users", (req, res) => {
-    const id = req.params["id"];
+    const id = req.query["id"];
     let result = findUserById(id);
     if (result === undefined) {
         res.status(404).send("Resource not found.");
     } else {
-        deleteUserById(id);
-        res.send();
+        const isDeleted = deleteUserById(id);
+        if (isDeleted) {
+            res.send();
+        } else {
+        res.status(500).send("Failed to delete user.")
+        }
     }
-  })
+  });
 
 const addUser = (user) => {
     users["users_list"].push(user);
