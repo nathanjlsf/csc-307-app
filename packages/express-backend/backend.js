@@ -65,6 +65,20 @@ const findUserById = (id) =>
     }
   });
 
+const deleteUserById = (id) =>
+    users["users_list"].pop((user) => user["id"] === id);
+
+  app.delete("/users", (req, res) => {
+    const id = req.params["id"];
+    let result = findUserById(id);
+    if (result === undefined) {
+        res.status(404).send("Resource not found.");
+    } else {
+        deleteUserById(id);
+        res.send();
+    }
+  })
+
 const addUser = (user) => {
     users["users_list"].push(user);
     return user;
