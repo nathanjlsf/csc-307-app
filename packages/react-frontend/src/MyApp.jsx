@@ -39,7 +39,13 @@ function removeOneCharacter(index) {
 
 function updateList(person) { 
   postUser(person)
-    .then(() => setCharacters([...characters, person]))
+    .then((res) => {
+      if (res.status === 201) {
+    setCharacters([...characters, person]);
+      } else {
+        console.error("Failed to add user.");
+      }
+    })
     .catch((error) => {
       console.log(error);
     })
