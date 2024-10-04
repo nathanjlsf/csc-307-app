@@ -31,6 +31,9 @@ function postUser(person) {
 }
 
 function removeOneCharacter(index) {
+  const promise = fetch("Http://localhost:8000/users", {
+    method: "DELETE"
+  })
   const updated = characters.filter((character, i) => {
     return i !== index;
   });
@@ -41,14 +44,17 @@ function updateList(person) {
   postUser(person)
     .then((res) => {
       if (res.status === 201) {
-    setCharacters([...characters, person]);
+        return res.json();
       } else {
         console.error("Failed to add user.");
       }
     })
+    .then((newUser) => {
+      setCharacters([...characters, newUser])
+    })
     .catch((error) => {
       console.log(error);
-    })
+    });
 }
 
 return (

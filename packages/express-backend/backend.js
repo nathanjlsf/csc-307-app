@@ -104,14 +104,24 @@ app.delete("/users", (req, res) => {
   });
 
 const addUser = (user) => {
+  const generateId = Math.random().toString(36).substring(7)
+  user["id"] = generateId;
     users["users_list"].push(user);
     return user;
   };
   
 app.post("/users", (req, res) => {
-    const userToAdd = req.body;
-    addUser(userToAdd);
-    res.status(201).send("Content created.")
+  const {name, job} = req.body;
+  if (!name || !job) {
+    return res.status(400).send({error: "Name and job required"});
+  }
+
+  try {
+    const newUser = addUser({name, job});
+    res.status(201).json(newUser);
+  } catch (error) {
+    res.status(500).send({error : "Failed to create user"});
+  }
   });
 
 app.get("/", (req, res) => {
