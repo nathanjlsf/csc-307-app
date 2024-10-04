@@ -90,16 +90,11 @@ const deleteUserById = (id) => {
 
 app.delete("/users", (req, res) => {
     const id = req.query["id"];
-    let result = findUserById(id);
-    if (result === undefined) {
-        res.status(404).send("Resource not found.");
+    let result = deleteUserById(id);
+    if (result) {
+        res.status(204).send("Deleted user.");
     } else {
-        const isDeleted = deleteUserById(id);
-        if (isDeleted) {
-            res.send();
-        } else {
-        res.status(500).send("Failed to delete user.")
-        }
+        res.status(404).send("User not found.");
     }
   });
 
