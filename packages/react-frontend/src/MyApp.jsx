@@ -31,16 +31,13 @@ function postUser(person) {
 }
 
 function removeOneCharacter(index) {
-  const characterToDelete = characters[index];
-  const id = characterToDelete.id;
-  const promise = fetch("Http://localhost:8000/users/${id}", {
+  const characterId = characters[index].id;
+  fetch(`Http://localhost:8000/users/${characterId}`, {
     method: "DELETE"
   })
     .then(res => {
       if (res.status === 204) {
-        const updated = characters.filter((character, i) => {
-          return i !== index;
-        });
+        const updated = characters.filter((_, i) => i !== index);
         setCharacters(updated);
       }
     })

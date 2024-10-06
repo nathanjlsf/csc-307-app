@@ -88,11 +88,11 @@ const deleteUserById = (id) => {
     }
 };
 
-app.delete("/users", (req, res) => {
-    const id = req.query["id"];
+app.delete("/users/:id", (req, res) => {
+    const id = req.params["id"];
     let result = deleteUserById(id);
-    if (result) {
-        res.status(204).send("Deleted user.");
+    if (result) { 
+        res.status(204).send("User deleted.");
     } else {
         res.status(404).send("User not found.");
     }
