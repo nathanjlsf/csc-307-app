@@ -31,7 +31,7 @@ function postUser(person) {
 }
 
 function removeOneCharacter(index) {
-  const characterId = characters[index].id;
+  const characterId = characters[index]._id;
   fetch(`Http://localhost:8000/users/${characterId}`, {
     method: "DELETE"
   })
